@@ -1,17 +1,10 @@
-import javax.sql.DataSource;
 import java.io.Closeable;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class DbConnector implements Closeable {
-
-    static final String DB_URL = "jdbc:postgresql://localhost/postgres";
-    static final String USER = "root";
-    static final String PASS = "1234";
-    private Connection connection;
 
     static final String FINDALL = "SELECT * FROM acc";
     static final String GETBYNAME = "SELECT * FROM acc where name = ?";
@@ -23,7 +16,9 @@ public class DbConnector implements Closeable {
     static final String UPDATEALL = "UPDATE acc SET name = ? , surname = ? , pass = ? , age = ? WHERE id = ?";
     static final String DELETEBYID = "DELETE FROM acc WHERE id = ?";
 
-    public DbConnector() {
+    private Connection connection;
+
+    public DbConnector(String DB_URL, String USER, String PASS) {
         try {
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
         } catch (SQLException e) {

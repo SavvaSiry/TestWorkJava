@@ -12,10 +12,14 @@ public class ConnectorTest {
     private String name;
     private DbConnector connector;
 
+    final String DB_URL = "jdbc:postgresql://localhost/postgres";
+    final String USER = "root";
+    final String PASS = "1234";
+
     @Before
     public void init() {
         name = uuid + "name";
-        connector = new DbConnector();
+        connector = new DbConnector(DB_URL, USER, PASS);
     }
 
     @Test

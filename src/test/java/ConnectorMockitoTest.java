@@ -3,6 +3,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.sql.Connection;
@@ -16,10 +17,10 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectorMockitoTest {
 
+    @InjectMocks
+    DbConnector connector;
     @Mock
     Connection connection;
-    @InjectMocks
-    DbConnector connector = new DbConnector();
     @Mock
     PreparedStatement mockPreparedStmnt;
     @Mock
@@ -29,7 +30,7 @@ public class ConnectorMockitoTest {
 
     @Before
     public void setUp() throws SQLException {
-        doNothing().when(connection).commit();
+        MockitoAnnotations.initMocks(this);
         when(connection.prepareStatement(anyString(), anyInt())).thenReturn(mockPreparedStmnt);
         when(connection.prepareStatement(anyString())).thenReturn(mockPreparedStmnt);
         doNothing().when(mockPreparedStmnt).setString(anyInt(), anyString());
@@ -40,7 +41,7 @@ public class ConnectorMockitoTest {
     }
 
     @Test
-    public void testCreateWithNoExceptions() throws SQLException {
+    public void testInsertAccount() throws SQLException {
         connector.insertAccount(new Account(UUID.randomUUID() + "name", "a", "asdasd", 123));
         verify(connection, times(1)).prepareStatement(DbConnector.INSERTACCOUNT);
         verify(mockPreparedStmnt, times(1)).execute();
